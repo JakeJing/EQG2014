@@ -30,30 +30,6 @@ Attach the data frame to the local environment
 attach(thamnophis)
 ```
 
-```
-## The following objects are masked from thamnophis (position 3):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 4):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 5):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 6):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 7):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 9):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 10):
-## 
-##     body, family, ilab, local, mid, post, slab, tail
-```
-
 
 Calculate the heritability of "body"
 Create a vector of all the unique family codes
@@ -291,7 +267,7 @@ mean(h2.all)
 ```
 
 ```
-## [1] 0.6882
+## [1] 0.6939
 ```
 
 ```r
@@ -306,7 +282,7 @@ var(h2.all)  #Our estimate of the sampling variance of the mean
 
 ```
 ##         moms
-## moms 0.01802
+## moms 0.01733
 ```
 
 ```r
@@ -314,7 +290,7 @@ sd(h2.all)  #Our estimate of the standard error of the mean
 ```
 
 ```
-## [1] 0.1342
+## [1] 0.1316
 ```
 
 
