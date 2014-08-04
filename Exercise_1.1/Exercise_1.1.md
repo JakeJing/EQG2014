@@ -43,10 +43,13 @@ attach(thamnophis)
 ## The following objects are masked from thamnophis (position 6):
 ## 
 ##     body, family, ilab, local, mid, post, slab, tail
-## The following objects are masked from thamnophis (position 8):
+## The following objects are masked from thamnophis (position 7):
 ## 
 ##     body, family, ilab, local, mid, post, slab, tail
 ## The following objects are masked from thamnophis (position 9):
+## 
+##     body, family, ilab, local, mid, post, slab, tail
+## The following objects are masked from thamnophis (position 10):
 ## 
 ##     body, family, ilab, local, mid, post, slab, tail
 ```
@@ -288,7 +291,7 @@ mean(h2.all)
 ```
 
 ```
-## [1] 0.6869
+## [1] 0.6882
 ```
 
 ```r
@@ -303,7 +306,7 @@ var(h2.all)  #Our estimate of the sampling variance of the mean
 
 ```
 ##         moms
-## moms 0.01713
+## moms 0.01802
 ```
 
 ```r
@@ -311,7 +314,7 @@ sd(h2.all)  #Our estimate of the standard error of the mean
 ```
 
 ```
-## [1] 0.1309
+## [1] 0.1342
 ```
 
 
