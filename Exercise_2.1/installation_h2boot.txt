@@ -1,0 +1,56 @@
+## # Instructions for h2boot to run on different operating systems:
+
+
+
+## ## Mac OS
+## Download the mac binary from the wordpress site and place in the folder of your choice.
+## Download the file All_females_2pops.txt from the wordpress site and place in the same folder as 
+## h2boot.bin
+
+## Navigate to the folder containing both h2boot.bin and All_females_2pops.txt and run:
+
+	chmod +x h2boot.bin
+	./h2boot.bin
+
+## ## Enter the following parameter values:
+
+Input file name = All_females_2pops.txt
+Trait names included in file = yes
+Output file name = all_females_out
+Number of bootstrap runs = 1000
+Random number seed = 1994
+Create files for bootstrap distributions = no
+Type of analysis = 7 (Parent-off regression w/full-sib ANOVA)
+Only use families with complete data = no
+Analyzing multiple populations = yes
+Make population comparisons = no
+
+## ## Ubuntu Linux: 
+## Open terminal and run
+
+	sudo apt-get install wine
+
+## Download the h2boot.exe file from http://pages.uoregon.edu/pphil/programs/cpc/beta/
+## Download the file All_females_2pops.txt from the wordpress site and place in the same folder as 
+## h2boot.exe
+
+## Navigate to the folder containing both h2boot.exe and All_females_2pops.txt and run:
+
+	wine h2boot.exe
+
+## ## Enter the following parameter values:
+
+Input file name = All_females_2pops.txt
+Trait names included in file = yes
+Output file name = all_females_out
+Number of bootstrap runs = 1000
+Random number seed = 1994
+Create files for bootstrap distributions = no
+Type of analysis = 7 (Parent-off regression w/full-sib ANOVA)
+Only use families with complete data = no
+Analyzing multiple populations = yes
+Make population comparisons = no
+
+
+
+
