@@ -1,0 +1,247 @@
+<html>
+<head>
+<title> Exercise in phylogenetic comparative methods </title>
+</head>
+<body bgcolor="#ccffff">
+<div align="center">
+<h1> R exercise on the contrasts method using <tt>APE</tt> </h1>
+</div>
+<P>
+This R exercise uses the <tt>pic</tt> (phylogenetically independent contrasts) function from Emanual Paradis's package <tt>APE</tt>. It also uses a few other functions from that package.
+<P>
+<h2> A supplementary reading or two </h2>
+<P>
+The folks at the R Hackathon on Comparative Methods in R have a <a href="http://informatics.nescent.org/wiki/R_Hackathon_1/Phylogenetic_Independent_Contrasts"> simple guide to using the <tt>pic</tt> function to compute phylogenetic contrasts</a>.  It is parallel to the material here and will be a helpful supplement to this exercise.  There is also a broader <a href="http://www2.hawaii.edu/~mbutler/Rquickstart/Rcomparative.pdf"> Comparative Methods and Data Analysis in R </a>
+by Marguerite Butler, Brian O'Meara, and Jason Pienaar which has more material
+on using <tt>APE</tt> and R for comparative methods.
+<P>
+<h2> The example's data </h2>
+<P>
+The data used in this example will be from a recent paper:
+<p>
+<table><tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+Alexander Riek and Fritz Geiser.  2013.  Allometry of thermal variables<br> in
+mammals: consequences of body size and phylogeny.<br> <i>Biological Reviews</i>,  Volume 88, Issue 3, pages 564-572 (August 2013). <a href="http://onlinelibrary.wiley.com/doi/10.1111/brv.12016/full"><br>DOI: 10.1111/brv.12016</a>
+</td>
+</tr></table>
+<p>
+The data provided is a phylogeny of 204 mammal species, which they derived from a published mammalian supertree.  Here it is in Newick format in a file <a href="mammals.tre"><tt>mammals.tre</tt></a>.  I will tell you below how to read this tree into APE. The species range widely over mammals, including monotremes and marsupials.  In the tree the species <i>Ovis ammon</i>, the argali or Asian mountain sheep, seems to be present instead of the mouflon or domestic sheep <i>Ovis orientalis aries</i>.  I did not have time to untangle this, so I have changed the
+species name in the tree to the latter.  If you want to know what any of the
+species are, I suggest typing its name into a browser.
+<p>
+The data is in a file <a href="mammals.dat"><tt>mammals.dat</tt></a> and shows 5 variables in 204 species, with some data missing and represented by NA.  This is a 204 x 8 data frame (the row names being the species names).  We will see how to read this
+data into APE.  The 5 columns are:
+<ol start="2">
+<li> SZ: Body mass (in grams).  Note that for large mammals these numbers can get very large.  They are very asymmetrically distributed.
+<li> BT: Body temperature (in degrees Celsius)
+<li> TLC: Lower critical temperature (in degrees Celsius)
+<li> TUC: Upper critical temperature (in degrees Celsius)
+<li> TNZ: Breadth of the thermo-neutral zone (in degrees Celsius)
+</ol>
+We will use the first three of these, since they are available in all 304 species.  It would be possible to reduce the phylogeny to those species on which all
+six variables are present and do an analysis on all 5 variables.
+<p>
+<h2>Starting APE</h2> 
+<p>
+Emanuel Paradis' phylogeny package APE is widely available and can be loaded by doing the command
+<table bgcolor="white"><tr><td>
+<pre>
+library(ape)
+</pre>
+</td></tr></table>
+or else the command
+<table bgcolor="white"><tr><td>
+<pre>
+require(ape)
+</pre>
+</td></tr></table>
+There will probably be a warning message that <tt>APE</tt> has been compiled
+with an earlier version of <tt>APE</tt>.  This can generally be ignored.
+<p>
+If this doesn't work, you will find APE at the CRAN archive <a href="http://cran.r-project.org/web/packages/ape/index.html">here</a>.
+<p>
+<h2> Loading the tree </h2>
+<p>
+An tree object of class phylo can be created from a text file in Newick tree
+format by the APE command
+<table bgcolor="white"><tr><td>
+<pre>
+tr <- read.tree("mammals.tre")
+</pre>
+</td></tr></table>
+<p>
+<h2> Reading in the data </h2>
+<p>
+<table bgcolor="white"><tr><td>
+<pre>
+dd <- read.table("mammals.dat")
+</pre>
+</td></tr></table>
+This reads in the data frame and calls it <tt>dd</tt>.  The species names and variable names are automatically visible to R.
+<p>
+<h2> Making vectors of the characters </h2>
+<P>
+Vectors containing the values of the characters are easily made, using the
+character names:
+<table bgcolor="white"><tr><td>
+<pre>
+x <- dd$SZ;
+y <- dd$BT;
+z <- dd$TLC;
+</pre>
+</td></tr></table>
+If we look at the histogram of <tt>x</tt>, the body size, we will find that it
+is bizarrely asymmetric, with most species near 0, and a few dominating the
+variation.  It is more sensible to work with the logarithm of body size.  That
+could be obtained as
+<table bgcolor="white"><tr><td>
+<pre>
+xl <- log(dd$SZ)
+</pre>
+</td></tr></table>
+or, more simply,
+<table bgcolor="white"><tr><td>
+<pre>
+xl <- log(x);
+</pre>
+</td></tr></table>
+<p>
+<h2> Regressions of species </h2>
+<p>
+If we were to ignore phylogeny, we can plot pairs of variables against each
+other, using commands like <tt>plot(y,tl)</tt>.  What do you see if you do that?
+Do these seem to be significant?  Use regression commands such as
+<table bgcolor="white"><tr><td>
+<pre>
+plot(y,xl);
+abline(lm(y ~ xl)$coef);
+summary(lm(y ~ xl));
+</pre>
+</td></tr></table>
+(execute these commands one at a time to see most clearly what is going on, and
+please notice that the tilde in the second and third commands is not a minus sign). The first does the plot, the second adds a line of best fit, and the third prints out a summary of the fit of <tt>y</tt> to <tt>xl</tt> including a statistical test of nonzero slope.
+<p>
+Alternatively we could have computed covariances or correlations,
+or obtained principal components
+from a matrix whose columns were the variables.  We will see how to do
+these below.
+<p>
+<h2> Phylogenetic comparative methods </h2>
+<P>
+Of course, this is not correct.  The points are not independent and identically
+distributed (why?).  To correct for the evolutionary relatedness of the points,
+we can use the phylogenetically independent contrasts.  We will use the function
+<tt>pic</tt> from <tt>APE</tt>.
+<p>
+There are two steps we will need for each variable.  For each variable,
+we will have <tt>pic</tt> compute a vector of contrasts.  To do that we
+must make sure that the species names on the tree are associated with
+the appropriate rows of the data matrix.  So for variable <tt>y</tt>,
+we use the command
+<table bgcolor="white"><tr><td>
+<pre>
+names(y) <- row.names(dd)
+</pre>
+</td></tr></table>
+<i>and you should make sure to do this separately for each
+of your variables</i>.
+<p>
+We are now ready to make up the contrasts vectors.  For <tt>y</tt>,
+we make a vector of contrasts using
+<table bgcolor="white"><tr><td>
+<pre>
+yc <- pic(y,tr)
+</pre>
+</td></tr></table>
+We don't have to associate names of species with the contrasts; each can 
+contain information from more than one species.
+<p>
+Now we can do plots, lines of best fit, and tests
+using the contrasts instead of the
+values for the species:
+<table bgcolor="white"><tr><td>
+<pre>
+plot(yc,xlc);
+</pre>
+</td></tr></table>
+and
+<table bgcolor="white"><tr><td>
+<pre>
+abline(lm(yc ~ xlc)$coef);
+</pre>
+</td></tr></table>
+and
+<table bgcolor="white"><tr><td>
+<pre>
+summary(lm(yc ~ xlc));
+</pre>
+</td></tr></table>
+we might want to do this for all possible pairs of variables.  There is
+the issue of which is the Y axis, and which is the X axis in the regression.
+Are there cases where the regression seemed to be significant, but is not
+significant when the contrasts are used?  Are there cases where a regression
+is not significant in the species values, but is when you use the contrasts?
+<p>
+<h2>Multivariate phylogenetic comparative methods</h2>
+<p>
+It will probably be better to take a more fully multivariate approach to
+covariation of characters.  If we make up a matrix whose columns are the
+contrast values, we can look at the covariance matrix, and from it
+compute correlations, principal components, etc.
+<p>
+To make up a matrix with the contrasts of all characters in it, you
+can do
+<table bgcolor="white"><tr><td>
+<pre>
+X <- cbind(xlc,yc,zc)
+</pre>
+</td></tr></table>
+Now it will be possible to do multivariate statistics on X.  As the elements of its columns are contrasts, they are independent of each other if the process on the tree is Brownian Motion. They are properly scaled (by the contrasts
+calculation used in <tt>pic</tt>) to be independent and identically distributed variates.  They continue to show the covariation among characters, so we can
+use them with ordinary multivariate statistics available in R.
+<p>
+But there is a complication.  The original variables had nonzero expectations,
+but (under the assumptions) the contrasts have expectation zero.  So in
+doing regressions or computing covariances, you should force the expectations
+to zero.  That means that
+<ul>
+<li> All regressions should be through the origin.  A typical regression
+calculation (say column 1 of X, which is <tt>xlc</tt> on column 2, which is <tt>y</tt>) would be
+<table bgcolor="white"><tr><td>
+<pre>
+lm(xlc ~ yc - 1)
+</pre>
+</td></tr></table>
+where the "-1" indicates that the regression should be forced through the
+origin.
+<li> The covariances of the columns of X can be estimated by taking the
+sums of products by the matrix calculations:
+<table bgcolor="white"><tr><td>
+<pre>
+S <- t(X) %*% X
+</pre>
+</td></tr></table>
+So S is the sum of squares (or sum of products) matrix.  We don't need any
+terms subtracting out the squares (or products) of means.  If we divide the
+sum-of-squares matrix S by the number of independent contrasts (202), we
+get the estimate of the covariance matrix of evolutionary changes in the traits:
+<table bgcolor="white"><tr><td>
+<pre>
+V <- S/202
+</pre>
+</td></tr></table>
+</ul>
+<P>
+<h2> Things you might do</h2>
+<p>
+<ol>
+<li> Use <tt>pic</tt> to compute the vectors of contrasts.  Also assemble these
+into a matrix X. Compute the covariance matrix V.
+<li> Do regressions (through the origin!) of variables on each other.  Are there cases where the original "tips" regression was significant, but the contrasts regression isn't?  Cases with the original regression is not significant, but the regression of contrast isn't?
+<li> Take the covariance matrix V and use the <tt>eigen</tt> function to find its principal components.  How does the first principal component compare with
+the first PC that you would get if you used the original (tips) variables
+and computed a covariance matrix using the <tt>cov</tt> function?
+</body>
+</html>
